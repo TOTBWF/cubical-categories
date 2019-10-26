@@ -23,5 +23,3 @@ record Monad (C : Category o ℓ) : Set (o ⊔ ℓ) where
   module T = Functor T
   open T public using () renaming (F₀ to T₀; F₁ to T₁)
 
-  field
-    assoc : μ 

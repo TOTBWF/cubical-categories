@@ -7,6 +7,7 @@ open import Cubical.Foundations.Prelude
 
 open import Categories.Category
 open import Categories.Functor.Core renaming (id to idF)
+import Categories.CommutativeDiagram.Square as Square
 
 private
   variable
@@ -24,10 +25,12 @@ record NaturalTransformation {C : Category o ℓ}
     module G = Functor G
   open F using (F₀; F₁)
   open G using () renaming (F₀ to G₀; F₁ to G₁)
+  open Square D
 
   field
     η : ∀ X → D [ F₀ X , G₀ X ]
     commute : ∀ {X Y} → (f : C [ X , Y ]) → D [ G₁ f ∘ η X ] ≡ D [ η Y ∘ F₁ f ]
+    -- → CommutativeSquare (η X) (F₁ f) (G₁ f) (η Y) 
 
 id : ∀ {F :  Functor C D} → NaturalTransformation F F
 id {C = C} {D = D} {F} = record
@@ -47,16 +50,11 @@ _∘ᵛ_ : ∀ {F G H : Functor C D} →
          NaturalTransformation G H → NaturalTransformation F G → NaturalTransformation F H
 _∘ᵛ_ {C = C} {D = D} {F} {G} {H} X Y = record
   { η = λ q → D [ X.η q ∘ Y.η q ]
-  ; commute = λ {q} {p} f →
-    D [ H₁ f ∘ D [ X.η q ∘ Y.η q ] ] ≡⟨ sym D.assoc ⟩
-    D [ D [ H₁ f ∘ X.η q ] ∘ Y.η q ] ≡⟨ cong (λ a → a D.∘ Y.η q) (X.commute f) ⟩
-    D [ D [ X.η p ∘ G₁ f ] ∘ Y.η q ] ≡⟨ D.assoc ⟩
-    D [ X.η p ∘ D [ G₁ f ∘ Y.η q ] ] ≡⟨ cong (λ a → (X.η p) D.∘ a) (Y.commute f) ⟩
-    D [ X.η p ∘ D [ Y.η p ∘ F₁ f ] ] ≡⟨ sym D.assoc ⟩
-    D [ D [ X.η p ∘ Y.η p ] ∘ F₁ f ] ∎
+  ; commute = λ {q} {p} f → sym (glue (sym (Y.commute f)) (sym (X.commute f)))
   }
   where
     module D = Category D
+    open import Categories.CommutativeDiagram.Square D
 
     module X = NaturalTransformation X
     module Y = NaturalTransformation Y

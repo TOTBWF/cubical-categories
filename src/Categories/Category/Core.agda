@@ -26,7 +26,11 @@ record Category (o ℓ : Level) : Set (suc (o ⊔ ℓ)) where
     identityˡ : ∀ {A B} {f : A ⇒ B} → id ∘ f ≡ f
     identityʳ : ∀ {A B} {f : A ⇒ B} → f ∘ id ≡ f
 
--- Some examples:
+  ∘-congˡ : ∀ {A B C} {f : A ⇒ B} {f′ : A ⇒ B} {g : B ⇒ C} → f ≡ f′ → g ∘ f ≡ g ∘ f′
+  ∘-congˡ {g = g} f≡f′ = cong (λ k → g ∘ k) f≡f′
+
+  ∘-congʳ : ∀ {A B C} {f : B ⇒ C} {f′ : B ⇒ C} {g : A ⇒ B} → f ≡ f′ → f ∘ g ≡ f′ ∘ g
+  ∘-congʳ {g = g} f≡f′ = cong (λ k → k ∘ g) f≡f′
 
 -- A single object category
 One : ∀ {o ℓ} → Category o ℓ
@@ -66,4 +70,3 @@ C ᵒᵖ = record
   where
     module C = Category C
     open C
-
