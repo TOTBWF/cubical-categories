@@ -1,0 +1,9 @@
+#+TITLE:Cubical Categories
+
+This library formalizes Category Theory inside of Cubical Agda.
+This lets us avoid issues of morphism equality, and hopefully
+lets us implement things like strict categories is a much easier way.
+
+* Origins
+  This library was born out of https://github.com/agda/agda-categories, and takes
+  quite a bit of inspiration from it.
