@@ -18,11 +18,30 @@ private
 
 module Pulls (a∘b≡c : a ∘ b ≡ c) where
 
+{-
+A -- f --> B --- c --> D
+            \         ^
+             \ comm  /
+              b     a
+               \   /
+                v /
+                 C
+-}
   pullˡ : a ∘ b ∘ f ≡ c ∘ f
   pullˡ {f = f} =
     a ∘ b ∘ f ≡⟨ sym assoc ⟩
     (a ∘ b) ∘ f ≡⟨ a∘b≡c ⟩∘⟨refl ⟩
     c ∘ f ∎
+
+{-
+A --- c --> C -- f --> D
+ \         ^
+  \ comm  /
+   b     a
+    \   /
+     v /
+      B
+-}
 
   pullʳ : (f ∘ a) ∘ b ≡ f ∘ c
   pullʳ {f = f} =
@@ -31,6 +50,119 @@ module Pulls (a∘b≡c : a ∘ b ≡ c) where
     f ∘ c ∎
 
 open Pulls public
+
+module Pushes (c≡a∘b : c ≡ a ∘ b) where
+
+{-
+A -- f --> B --- c --> D
+            \         ^
+             \ comm  /
+              b     a
+               \   /
+                v /
+                 C
+-}
+
+  pushˡ : c ∘ f ≡ a ∘ (b ∘ f)
+  pushˡ {f = f} = sym (pullˡ (sym c≡a∘b))
+
+{-
+A --- c --> C -- f --> D
+ \         ^
+  \ comm  /
+   b     a
+    \   /
+     v /
+      B
+-}
+
+  pushʳ : f ∘ c ≡ (f ∘ a) ∘ b
+  pushʳ {f = f} = sym (pullʳ (sym c≡a∘b))
+
+open Pushes public
+
+module IntroElim (a≡id : a ≡ id) where
+
+{-
+  /- a --\
+ /        v
+A   comm  A -- f --> b
+ \        ^
+  \- id -/
+-}
+
+  elimʳ : f ∘ a ≡ f
+  elimʳ {f = f} =
+    f ∘ a ≡⟨ refl⟩∘⟨ a≡id ⟩
+    f ∘ id ≡⟨ identityʳ ⟩
+    f ∎
+
+  introʳ : f ≡ f ∘ a
+  introʳ = sym elimʳ
+
+{-
+             /- a --\
+            /        v
+A -- f --> B   comm  B
+            \        ^
+             \- id -/
+-}
+
+  elimˡ : a ∘ f ≡ f
+  elimˡ {f = f} =
+    a ∘ f ≡⟨ a≡id ⟩∘⟨refl ⟩
+    id ∘ f ≡⟨ identityˡ ⟩
+    f ∎
+
+  introˡ : f ≡ a ∘ f
+  introˡ = sym elimˡ
+
+module Cancellers (inv : h ∘ i ≡ id) where
+
+{-
+
+      A
+     ^  ^
+    /    \
+   f      f
+  /  comm  \
+ /          \
+B --- id --> B
+ \          ^
+  \  comm  /
+   i      h
+    \    /
+     v  /
+      C
+-}
+
+  cancelʳ : (f ∘ h) ∘ i ≡ f
+  cancelʳ {f = f} = 
+    (f ∘ h) ∘ i ≡⟨ pullʳ inv ⟩
+    f ∘ id ≡⟨ identityʳ ⟩
+    f ∎
+
+{-
+
+      A
+     /  \
+    /    \
+   f      f
+  /  comm  \
+ v          v
+B --- id --> B
+ \          ^
+  \  comm  /
+   i      h
+    \    /
+     v  /
+      C
+-}
+  cancelˡ : h ∘ i ∘ f ≡ f
+  cancelˡ {f = f} = 
+    h ∘ i ∘ f ≡⟨ pullˡ inv ⟩
+    id ∘ f ≡⟨ identityˡ ⟩
+    f ∎
 
 -- essentially composition in the arrow category
 {-
