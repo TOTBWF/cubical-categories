@@ -32,6 +32,13 @@ record Category (o ℓ : Level) : Set (suc (o ⊔ ℓ)) where
   ∘-congʳ : ∀ {A B C} {f : B ⇒ C} {f′ : B ⇒ C} {g : A ⇒ B} → f ≡ f′ → f ∘ g ≡ f′ ∘ g
   ∘-congʳ {g = g} f≡f′ = cong (λ k → k ∘ g) f≡f′
 
+  record _≃_ (a : Obj) (b : Obj) : Set ℓ where
+    field
+      isoˡ : a ⇒ b
+      isoʳ : b ⇒ a
+      inverseˡ : isoˡ ∘ isoʳ ≡ id
+      inverseʳ : isoʳ ∘ isoˡ ≡ id
+
 -- A single object category
 One : ∀ {o ℓ} → Category o ℓ
 One {o} {ℓ} = record
