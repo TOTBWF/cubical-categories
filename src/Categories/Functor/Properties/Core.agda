@@ -10,23 +10,23 @@ open import Cubical.Foundations.GroupoidLaws renaming
   )
 
 open import Categories.Category
+open import Categories.Category.Instances.Path using (cong-homo)
 open import Categories.Functor.Core renaming (_∘F_ to _∘_; id to Id)
 
 open import Level
 
 private
   variable
-    o ℓ : Level
+    o ℓ o′ : Level
     𝓒 𝓓 𝓔 𝓕 : Category o ℓ
 
 module _ (F : Functor 𝓒 𝓓) where
   private
     module 𝓒 = Category 𝓒
     module 𝓓 = Category 𝓓
-
+    module F = Functor F
 
   open 𝓒 hiding (_∘_)
-  module F = Functor F
   open F using (F₀; F₁)
 
   private
@@ -61,4 +61,30 @@ module _ (F : Functor 𝓒 𝓓) where
     ; F₁ = F₁
     ; identity = λ i → ∙-unitʳ F.identity (~ j) i
     ; homomorphism = λ {_ _ _ f g} i → ∙-unitʳ (F.homomorphism {f = f} {g = g}) (~ j) i
+    }
+
+module _ (F : Functor 𝓒 𝓓) (G : Functor 𝓓 𝓔) (H : Functor 𝓔 𝓕) where
+  private
+    module F = Functor F
+    module G = Functor G
+    module H = Functor H
+
+  open F using (F₀; F₁)
+  open G renaming (F₀ to G₀; F₁ to G₁)
+  open H renaming (F₀ to H₀; F₁ to H₁)
+
+  ∘F-assoc-filler : ∀ {A : Set o} {B : Set o′} {w x y : A} {z : B} → (f : A → B) →
+            (p : w ≡ x) → (q : x ≡ y) → (r : f y ≡ z) →
+            cong f p ∙ (cong f q ∙ r) ≡ cong f (p ∙ q) ∙ r
+  ∘F-assoc-filler f p q r =
+    ∙-assoc (cong f p) (cong f q) r ∙ cong (λ a → a ∙ r) (cong-homo f p q)
+
+  ∘F-assoc : (H ∘ G) ∘ F ≡ H ∘ (G ∘ F)
+  ∘F-assoc j = record
+    { F₀ = λ x → H₀ (G₀ (F₀ x))
+    ; F₁ = λ f → H₁ (G₁ (F₁ f))
+    ; identity = λ i →
+      ∘F-assoc-filler H₁ (cong G₁ F.identity) G.identity H.identity j i
+    ; homomorphism = λ {_ _ _ f g} i →
+      ∘F-assoc-filler H₁ (cong G₁ F.homomorphism) G.homomorphism (H.homomorphism {f = G₁ (F₁ f)} {g = G₁ (F₁ g)}) j i
     }
