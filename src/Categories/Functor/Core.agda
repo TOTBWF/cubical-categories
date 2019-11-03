@@ -7,56 +7,50 @@ open import Level
 
 open import Cubical.Foundations.Prelude
 
-
 private
   variable
-    o ℓ o′ ℓ′ o′′ ℓ′′ : Level
+    o ℓ o′ ℓ′ o″ ℓ″ o‴ ℓ‴ : Level
     
-record Functor (C : Category o ℓ) (D : Category o′ ℓ′) : Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′) where
-  private module C = Category C
-  private module D = Category D
+record Functor (𝓒 : Category o ℓ) (𝓓 : Category o′ ℓ′) : Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′) where
+  private module 𝓒 = Category 𝓒
+  private module 𝓓 = Category 𝓓
 
   field
-    F₀ : C.Obj → D.Obj
-    F₁ : ∀ {A B} → C [ A , B ] → D [ F₀ A , F₀ B ]
+    F₀ : 𝓒.Obj → 𝓓.Obj
+    F₁ : ∀ {A B} → 𝓒 [ A , B ] → 𝓓 [ F₀ A , F₀ B ]
 
-    identity : ∀ {A} → F₁ (C.id {A}) ≡ D.id
-    homomorphism : ∀ {X Y Z} {f : C [ X , Y ]}
-                             {g : C [ Y , Z ]}
-                             → F₁ (C [ g ∘ f ]) ≡ D [ F₁ g ∘ F₁ f ]
-
+    identity : ∀ {A} → F₁ (𝓒.id {A}) ≡ 𝓓.id
+    homomorphism : ∀ {A B C} {f : 𝓒 [ A , B ]}
+                             {g : 𝓒 [ B , C ]}
+                             → F₁ (𝓒 [ g ∘ f ]) ≡ 𝓓 [ F₁ g ∘ F₁ f ]
 Endofunctor : Category o ℓ → Set _
-Endofunctor C = Functor C C
+Endofunctor 𝓒 = Functor 𝓒 𝓒
 
-id : ∀ {C : Category o ℓ} → Endofunctor C
-id {C = C} = record
+id : ∀ {𝓒 : Category o ℓ} → Endofunctor 𝓒
+id  = record
   { F₀           = λ x → x
   ; F₁           = λ f → f
   ; identity     = refl
   ; homomorphism = refl
   }
 
-_∘F_ : ∀ {C : Category o ℓ} {D : Category o′ ℓ′} {E : Category o′′ ℓ′′}
-    → Functor D E → Functor C D → Functor C E
-_∘F_ {C = C} {D = D} {E = E} F G = record
+infixr 9 _∘F_
+
+-- Functor Composition.
+-- NOTE: Using the reasoning combinators from `cubical` makes
+-- the proofs look nicer, but they add an extra `refl` on
+-- to the path. This makes other proofs much more painful,
+-- so we should avoid doing so.
+_∘F_ : ∀ {𝓒 : Category o ℓ} {𝓓 : Category o′ ℓ′} {𝓔 : Category o″ ℓ″}
+    → Functor 𝓓 𝓔 → Functor 𝓒 𝓓 → Functor 𝓒 𝓔
+_∘F_ F G = record
   { F₀ = λ x → F₀ (G₀ x)
   ; F₁ = λ f → F₁ (G₁ f)
-  ; identity =
-             F₁ (G₁ C.id) ≡⟨ cong F₁ G.identity ⟩
-             F₁ D.id ≡⟨ F.identity ⟩
-             E.id ∎
-  ; homomorphism = λ {X} {Y} {Z} {f = f} {g = g} →
-             F₁ (G₁ (C [ g ∘ f ])) ≡⟨ cong F₁ G.homomorphism ⟩
-             F₁ (D [ G₁ g ∘ G₁ f ] ) ≡⟨ F.homomorphism ⟩
-             E [ F₁ (G₁ g) ∘ F₁ (G₁ f) ] ∎
+  ; identity = (cong F₁ G.identity) ∙ F.identity
+  ; homomorphism = λ {X} {Y} {Z} {f = f} {g = g} → (cong F₁ G.homomorphism) ∙ F.homomorphism
   }
   where
-    module C = Category C
-    module D = Category D
-    module E = Category E
-
     module F = Functor F
     module G = Functor G
     open F
     open G renaming (F₀ to G₀; F₁ to G₁)
-
