@@ -10,7 +10,6 @@ open import Data.Unit.Polymorphic using (⊤; tt)
 open import Cubical.Foundations.Prelude
 
 record Category (o ℓ : Level) : Set (suc (o ⊔ ℓ)) where
-  eta-equality
   infix  4 _⇒_
   infixr 9 _∘_
 

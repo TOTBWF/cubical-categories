@@ -6,6 +6,7 @@ module Categories.Reasoning.Commutative {o ℓ} (𝓒 : Category o ℓ) where
 
 open import Cubical.Foundations.Prelude
 open import Categories.Reasoning.Hom 𝓒
+open import Categories.Reasoning.Paths
 open import Categories.CommutativeDiagram.Square 𝓒
 open Category 𝓒
 
@@ -30,7 +31,7 @@ A -- f --> B --- c --> D
   pullˡ : a ∘ b ∘ f ≡ c ∘ f
   pullˡ {f = f} =
     a ∘ b ∘ f ≡⟨ sym assoc ⟩
-    (a ∘ b) ∘ f ≡⟨ a∘b≡c ⟩∘⟨refl ⟩
+    (a ∘ b) ∘ f ≡⟨ a∘b≡c ⟩∘⟨refl ⟩≡
     c ∘ f ∎
 
 {-
@@ -46,7 +47,7 @@ A --- c --> C -- f --> D
   pullʳ : (f ∘ a) ∘ b ≡ f ∘ c
   pullʳ {f = f} =
     (f ∘ a) ∘ b ≡⟨ assoc ⟩
-    f ∘ a ∘ b ≡⟨ refl⟩∘⟨ a∘b≡c ⟩
+    f ∘ a ∘ b ≡⟨ refl⟩∘⟨ a∘b≡c ⟩≡
     f ∘ c ∎
 
 open Pulls public
@@ -94,7 +95,7 @@ A   comm  A -- f --> b
   elimʳ : f ∘ a ≡ f
   elimʳ {f = f} =
     f ∘ a ≡⟨ refl⟩∘⟨ a≡id ⟩
-    f ∘ id ≡⟨ identityʳ ⟩
+    f ∘ id ≡⟨ identityʳ ⟩≡
     f ∎
 
   introʳ : f ≡ f ∘ a
@@ -111,7 +112,7 @@ A -- f --> B   comm  B
   elimˡ : a ∘ f ≡ f
   elimˡ {f = f} =
     a ∘ f ≡⟨ a≡id ⟩∘⟨refl ⟩
-    id ∘ f ≡⟨ identityˡ ⟩
+    id ∘ f ≡⟨ identityˡ ⟩≡
     f ∎
 
   introˡ : f ≡ a ∘ f
@@ -139,7 +140,7 @@ B --- id --> B
   cancelʳ : (f ∘ h) ∘ i ≡ f
   cancelʳ {f = f} = 
     (f ∘ h) ∘ i ≡⟨ pullʳ inv ⟩
-    f ∘ id ≡⟨ identityʳ ⟩
+    f ∘ id ≡⟨ identityʳ ⟩≡
     f ∎
 
 {-
@@ -161,7 +162,7 @@ B --- id --> B
   cancelˡ : h ∘ i ∘ f ≡ f
   cancelˡ {f = f} = 
     h ∘ i ∘ f ≡⟨ pullˡ inv ⟩
-    id ∘ f ≡⟨ identityˡ ⟩
+    id ∘ f ≡⟨ identityˡ ⟩≡
     f ∎
 
 -- essentially composition in the arrow category
@@ -186,7 +187,7 @@ glue-□ : CommutativeSquare c′ a′ a c″ →
 glue-□ {c′ = c′} {a′ = a′} {a = a} {c″ = c″} {c = c} {b′ = b′} {b = b} sq-a sq-b =
   (a ∘ b) ∘ c ≡⟨ pullʳ sq-b ⟩
   a ∘ (c′ ∘ b′) ≡⟨ pullˡ sq-a ⟩
-  (c″ ∘ a′) ∘ b′ ≡⟨ assoc ⟩
+  (c″ ∘ a′) ∘ b′ ≡⟨ assoc ⟩≡
   c″ ∘ a′ ∘ b′ ∎
   
 
@@ -211,7 +212,7 @@ A₁ -- a′ --> B₁
 glue-◃ʳ : a ∘ b ≡ a′ → a′ ∘ b′ ≡ a″ → a ∘ (b ∘ b′) ≡ a″
 glue-◃ʳ {a = a} {b = b} {a′ = a′} {b′ = b′} {a″ = a″} a∘b≡a′ a′∘b′≡a″ =
   a ∘ b ∘ b′ ≡⟨ pullˡ a∘b≡a′ ⟩
-  a′ ∘ b′ ≡⟨ a′∘b′≡a″ ⟩
+  a′ ∘ b′ ≡⟨ a′∘b′≡a″ ⟩≡
   a″ ∎
   
 -- essentially composition in the under category
@@ -235,5 +236,5 @@ A₁ -- b′ --> C₁
 glue-◃ˡ : a′ ∘ b′ ≡ b″ → a ∘ b ≡ b′ → (a′ ∘ a) ∘ b ≡ b″
 glue-◃ˡ {a′ = a′} {b′ = b′} {b″ = b″} {a = a} {b = b} a′∘b′≡b″ a∘b≡b′ =
   (a′ ∘ a) ∘ b ≡⟨ pullʳ a∘b≡b′ ⟩
-  a′ ∘ b′ ≡⟨ a′∘b′≡b″ ⟩
+  a′ ∘ b′ ≡⟨ a′∘b′≡b″ ⟩≡
   b″ ∎

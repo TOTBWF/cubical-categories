@@ -1,0 +1,17 @@
+#+TITLE: Notes
+
+This file serves as a working notebook of all design choices,
+experiments, and observations that I have made while writing this.
+
+* Equality
+  The biggest deviation from other category theory libraries
+  (most notably =agda-categories=) is that we use paths
+  when defining laws rather than parameterizing
+  by some notion of morphism equality.
+
+  This would seem to present some problems when dealing with weaker
+  constructs (bicategories, etc), but I suspect that Higher Inductive
+  Types will make short work of them. For example, consider the
+  bicategory case.
+  
+  

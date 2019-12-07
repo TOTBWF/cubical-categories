@@ -7,6 +7,7 @@ open import Cubical.Foundations.Prelude
 
 open import Categories.Category
 open import Categories.Functor.Core renaming (id to idF)
+open import Categories.Reasoning.Paths
 open import Categories.Functor.Properties.Core
 import Categories.CommutativeDiagram.Square as Square
 
@@ -35,10 +36,10 @@ record NaturalTransformation {C : Category o ℓ}
 id : ∀ {F :  Functor C D} → NaturalTransformation F F
 id {C = C} {D = D} {F} = record
   { η = λ _ → D.id
-  ; commute = λ f → 
-      D [ D.id ∘ F₁ f ] ≡⟨ D.identityˡ ⟩
-      F₁ f ≡⟨ sym D.identityʳ ⟩
-      D [ F₁ f ∘ D.id ] ∎
+  ; commute = λ f →
+    D [ D.id ∘ F₁ f ] ≡⟨ D.identityˡ ⟩
+    F₁ f ≡⟨ sym D.identityʳ ⟩≡
+    D [ F₁ f ∘ D.id ] ∎
   }
   where
     module C = Category C
