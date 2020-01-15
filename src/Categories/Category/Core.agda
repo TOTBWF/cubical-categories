@@ -36,8 +36,8 @@ record Category (o ℓ : Level) : Set (suc (o ⊔ ℓ)) where
 -- A single object category
 One : ∀ {o ℓ} → Category o ℓ
 One {o} {ℓ} = record
-  { Obj = ⊤ o
-  ; _⇒_ = λ _ _ → ⊤ ℓ
+  { Obj = ⊤
+  ; _⇒_ = λ _ _ → ⊤
   ; id = tt
   ; _∘_ = λ _ _ → tt
   ; assoc = λ i → tt
