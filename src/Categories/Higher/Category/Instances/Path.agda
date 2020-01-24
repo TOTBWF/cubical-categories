@@ -1,6 +1,6 @@
 
 {-# OPTIONS --cubical --safe #-}
-module Categories.Category.Instances.Path where
+module Categories.Higher.Category.Instances.Path where
 
 open import Level
 
@@ -11,8 +11,7 @@ open import Cubical.Foundations.GroupoidLaws renaming
   ; assoc to ∙-assoc
   )
 
-open import Categories.Category.Core
-open import Categories.Functor.Core
+open import Categories.Higher.Category.Core
 
 private
   variable
@@ -24,7 +23,7 @@ Unfortunately, `cubical` defines composition
 of paths with it's arguments flipped, so we
 have to do some munging to get everything to line up.
 -}
-PATH : ∀ {o} → (A : Set o) → Category o o
+PATH : ∀ {o} → (A : Set o) → [∞,1]-Category o o
 PATH A = record
   { Obj = A
   ; _⇒_ = _≡_
@@ -49,14 +48,14 @@ cong-homo : ∀ {x y z : A} → (f : A → B) →
           cong f p ∙ cong f q ≡ cong f (p ∙ q)
 cong-homo f p q j i = cong-homo-filler f p q i1 j i
 
-{-
-Every function between two types is a functor between 
-their underlying groupoids.
--}
-liftF : ∀ (f : A → B) → Functor (PATH A) (PATH B)
-liftF f = record
-  { F₀ = f
-  ; F₁ = cong f
-  ; identity = λ {a} j i → f a
-  ; homomorphism = λ {a b c p q} j i → cong-homo f p q (~ j) i
-  }
+-- {-
+-- Every function between two types is a functor between 
+-- their underlying groupoids.
+-- -}
+-- liftF : ∀ (f : A → B) → Functor (PATH A) (PATH B)
+-- liftF f = record
+--   { F₀ = f
+--   ; F₁ = cong f
+--   ; identity = λ {a} j i → f a
+--   ; homomorphism = λ {a b c p q} j i → cong-homo f p q (~ j) i
+--   }
