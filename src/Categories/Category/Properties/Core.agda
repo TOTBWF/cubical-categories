@@ -2,11 +2,11 @@
 
 open import Categories.Category.Core
 
-module Categories.Category.Properties.Core {o ℓ} (C : Category o ℓ) where
+module Categories.Category.Properties.Core {o ℓ} (𝓒 : Category o ℓ) where
 
 open import Cubical.Foundations.Prelude
 
-open Category C
+open Category 𝓒
 
 id-unique : ∀ {a} {f : a ⇒ a} → (∀ {b} → (g : a ⇒ b) → g ∘ f ≡ g) → f ≡ id
 id-unique {f = f} g∘f≡g = 
