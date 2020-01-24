@@ -10,8 +10,9 @@ open import Cubical.Foundations.GroupoidLaws renaming
   )
 
 open import Categories.Category
-open import Categories.Category.Instances.Path using (cong-homo)
 open import Categories.Functor.Core renaming (_∘F_ to _∘_; id to Id)
+
+open import Categories.Reasoning.Paths
 
 open import Level
 

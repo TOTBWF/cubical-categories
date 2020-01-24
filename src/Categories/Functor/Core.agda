@@ -1,11 +1,12 @@
 {-# OPTIONS --cubical --safe #-}
-open import Categories.Category
 
 module Categories.Functor.Core where
 
 open import Level
 
 open import Cubical.Foundations.Prelude
+
+open import Categories.Category
 
 private
   variable
