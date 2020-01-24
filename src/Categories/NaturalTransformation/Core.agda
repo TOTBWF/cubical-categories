@@ -49,16 +49,16 @@ id {C = C} {D = D} {F} = record
 -- Vertical Composition
 _∘ᵛ_ : ∀ {F G H : Functor C D} →
          NaturalTransformation G H → NaturalTransformation F G → NaturalTransformation F H
-_∘ᵛ_ {C = C} {D = D} {F} {G} {H} X Y = record
-  { η = λ q → D [ X.η q ∘ Y.η q ]
-  ; commute = λ {q} {p} f → glue-□ (X.commute f) (Y.commute f)
+_∘ᵛ_ {C = C} {D = D} {F} {G} {H} α β = record
+  { η = λ q → D [ α.η q ∘ β.η q ]
+  ; commute = λ {q} {p} f → glue-□ (α.commute f) (β.commute f)
   }
   where
     module D = Category D
     open import Categories.Reasoning.Commutative D
 
-    module X = NaturalTransformation X
-    module Y = NaturalTransformation Y
+    module α = NaturalTransformation α 
+    module β = NaturalTransformation β 
 
     module F = Functor F
     module G = Functor G
