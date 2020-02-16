@@ -3,7 +3,7 @@ module Categories.Category.Product where
 
 open import Level
 
-open import Data.Product using (_,_; proj₁; proj₂) renaming (_×_ to _×′_)
+open import Data.Product using (_,_; proj₁; proj₂) renaming (_×_ to _×′_) public
 
 open import Cubical.Foundations.HLevels
 

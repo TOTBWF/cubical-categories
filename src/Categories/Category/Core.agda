@@ -8,6 +8,8 @@ open import Relation.Binary hiding (_⇒_)
 open import Cubical.Foundations.Prelude
 
 
+  
+
 record Category (o ℓ : Level) : Set (suc (o ⊔ ℓ)) where
   eta-equality
   infix  4 _⇒_
@@ -17,10 +19,10 @@ record Category (o ℓ : Level) : Set (suc (o ⊔ ℓ)) where
     Obj : Set o
     _⇒_ : Rel Obj ℓ
 
+  field
     id  : ∀ {A} → (A ⇒ A)
     _∘_ : ∀ {A B C} → (B ⇒ C) → (A ⇒ B) → (A ⇒ C)
 
-  field
     hom-is-set : ∀ {A B} → isSet (A ⇒ B)
     assoc      : ∀ {A B C D} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} → (h ∘ g) ∘ f ≡ h ∘ (g ∘ f)
     identityˡ  : ∀ {A B} {f : A ⇒ B} → id ∘ f ≡ f
